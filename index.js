@@ -21,7 +21,7 @@ conexion.connect((error) => {
   if (error) {
     throw error;
   } else {
-    console.log('CONEXION EXITOSA');
+    console.log('CONEXION EXITOSAaaa');
   }
 });
 conexion.end();
