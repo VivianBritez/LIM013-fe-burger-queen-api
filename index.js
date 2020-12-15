@@ -1,4 +1,5 @@
 const express = require('express');
+const mysql = require('mysql');
 const config = require('./config');
 const authMiddleware = require('./middleware/auth');
 const errorHandler = require('./middleware/error');
@@ -9,6 +10,21 @@ const { port, dbUrl, secret } = config;
 const app = express();
 
 // TODO: Conexión a la Base de Datos (MongoDB o MySQL)
+const conexion = mysql.createConnection({
+  host: 'localhost',
+  database: 'burger__queen',
+  user: 'root',
+  password: 'sql12345',
+});
+
+conexion.connect((error) => {
+  if (error) {
+    throw error;
+  } else {
+    console.log('CONEXION EXITOSA');
+  }
+});
+conexion.end();
 
 app.set('config', config);
 app.set('pkg', pkg);
