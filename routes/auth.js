@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
+const database = require('../database.js');
+const pool = require('../database.js');
 
 const { secret } = config;
 
@@ -25,8 +27,18 @@ module.exports = (app, nextMain) => {
     }
 
     // TODO: autenticar a la usuarix
-    next();
+    try {
+      pool.query(`SELECT *FROM users WHERE email = "${email}"`, (error, result) => {
+        if (error) throw error;
+        if (result) {
+          console.log(result);
+        }
+      });
+    } catch (error) {
+      return error;
+    }
   });
+  // next();
 
   return nextMain();
 };
