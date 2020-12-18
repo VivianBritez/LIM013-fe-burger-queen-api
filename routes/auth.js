@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
+// const bcrypt = require('bcrypt');
 const config = require('../config');
+const { conexion } = require('../database');
 
 const { secret } = config;
 
@@ -19,14 +21,41 @@ module.exports = (app, nextMain) => {
    */
   app.post('/auth', (req, resp, next) => {
     const { email, password } = req.body;
-
     if (!email || !password) {
       return next(400);
     }
 
-    // TODO: autenticar a la usuarix
-    next();
+    // 
+    const sql = `SELECT * FROM users WHERE email = "${email}" `;
+    conexion.query(sql, (error, result) => {
+      if (error) throw error;
+      if (!result) {
+        return resp.status(400).json({
+          success: 0,
+          data: 'Invalid email',
+        });
+      }
+      const pass = password === result[0].password;
+      if (pass) {
+        // result.password = undefined;
+        const jsontoken = jwt.sign({ result }, secret, {
+          expiresIn: '1h',
+        });
+        resp.header('authorization', jsontoken); // 
+        resp.status(200).json({
+          success: 1,
+          message: 'login successfully',
+          token: jsontoken,
+        });
+      } else {
+        resp.status(400).json({
+          success: 0,
+          data: 'Invalid password',
+        });
+      }
+    });
   });
 
+  // next();
   return nextMain();
 };
