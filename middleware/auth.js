@@ -1,16 +1,14 @@
+/* eslint-disable no-nested-ternary */
 const jwt = require('jsonwebtoken');
 const conexion = require('../database');
 
 module.exports = (secret) => (req, resp, next) => {
   const { authorization } = req.headers;
-
-  console.log(authorization);
   if (!authorization) {
     return next();
   }
-
   const [type, token] = authorization.split(' ');
-
+  // no deberia ser bearer porque seria abierto y accesible
   if (type.toLowerCase() !== 'bearer') {
     return next();
   }
@@ -21,7 +19,7 @@ module.exports = (secret) => (req, resp, next) => {
     }
     // TODO: Verificar identidad del usuario usando `decodeToken.uid`
     const sql = `SELECT * FROM users WHERE email = "${decodedToken.result[0].email}" `;
-  
+
     conexion.query(sql, (error, result) => {
       if (error) throw error;
       if (result) {
@@ -50,17 +48,8 @@ module.exports.isAdmin = (req) => {
   return false;
 };
 
-module.exports.requireAuth = (req, resp, next) => (
-  (!module.exports.isAuthenticated(req))
-    ? next(401)
-    : next()
-);
+// eslint-disable-next-line max-len
+module.exports.requireAuth = (req, resp, next) => (!module.exports.isAuthenticated(req) ? next(401) : next());
 
-module.exports.requireAdmin = (req, resp, next) => (
-  // eslint-disable-next-line no-nested-ternary
-  (!module.exports.isAuthenticated(req))
-    ? next(401)
-    : (!module.exports.isAdmin(req))
-      ? next(403)
-      : next()
-);
+// eslint-disable-next-line max-len
+module.exports.requireAdmin = (req, resp, next) => (!module.exports.isAuthenticated(req)? next(401): !module.exports.isAdmin(req) ? next(403): next());
