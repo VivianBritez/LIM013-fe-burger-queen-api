@@ -24,6 +24,8 @@ module.exports = (app, nextMain) => {
     if (!email || !password) {
       return next(400);
     }
+
+    // 
     const sql = `SELECT * FROM users WHERE email = "${email}" `;
     conexion.query(sql, (error, result) => {
       if (error) throw error;
@@ -33,23 +35,18 @@ module.exports = (app, nextMain) => {
           data: 'Invalid email',
         });
       }
-      // const pass = bcrypt.compareSync(password, result[0].password);
       const pass = password === result[0].password;
-      console.log(pass);
       if (pass) {
         // result.password = undefined;
         const jsontoken = jwt.sign({ result }, secret, {
           expiresIn: '1h',
         });
-        resp.header('authorization', jsontoken);
+        resp.header('authorization', jsontoken); // 
         resp.status(200).json({
           success: 1,
           message: 'login successfully',
           token: jsontoken,
         });
-
-        // resp.header('authorization', "token");
-        // resp.status(200).json(result);
       } else {
         resp.status(400).json({
           success: 0,
