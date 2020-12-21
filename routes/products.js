@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const {
   requireAuth,
   requireAdmin,
@@ -74,7 +75,6 @@ module.exports = (app, nextMain) => {
    */
   app.post('/products', requireAdmin, (req, resp, next) => {
   });
-
 
   /**
    * @name PUT /products

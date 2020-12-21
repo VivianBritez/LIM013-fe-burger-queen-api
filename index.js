@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const express = require('express'); // framework of node.js
 const config = require('./config');
 const authMiddleware = require('./middleware/auth');
@@ -8,7 +9,7 @@ const pkg = require('./package.json');
 const { port, dbUrl, secret } = config;
 const app = express();
 // TODO: Conexión a la Base de Datos (MySQL)
- 
+
 // parse application/x-www-form-urlencoded --parse URL-encoded bodies
 app.use(express.urlencoded({ extended: false }));
 // recognize the incoming request object as a JSON object

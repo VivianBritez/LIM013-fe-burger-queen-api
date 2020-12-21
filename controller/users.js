@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const { conexion } = require('../database');
 
 module.exports = {
