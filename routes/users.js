@@ -16,11 +16,11 @@ const initAdminUser = (app, next) => {
     return next();
   }
 
-  const adminUser = {
+  /* const adminUser = {
     email: adminEmail,
     password: bcrypt.hashSync(adminPassword, 10),
     roles: { admin: true },
-  };
+  }; */
 
   // TODO: crear usuaria admin
   next();

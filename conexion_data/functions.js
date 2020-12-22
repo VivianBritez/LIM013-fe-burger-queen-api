@@ -1,7 +1,7 @@
 const { conexion } = require('../database');
 
 const getAllData = (table, page, limit, host) => new Promise((resolve, reject) => {
-  console.log('hola');
+  console.info('hola');
   conexion.query(`SELECT * FROM ${table}`, (error, result) => {
     if (result.length) {
       const totalData = result.length;

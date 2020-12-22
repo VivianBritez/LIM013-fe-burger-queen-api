@@ -25,7 +25,6 @@ module.exports = (app, nextMain) => {
       return next(400);
     }
 
-    // 
     const sql = `SELECT * FROM users WHERE email = "${email}" `;
     conexion.query(sql, (error, result) => {
       if (error) throw error;
@@ -40,7 +39,7 @@ module.exports = (app, nextMain) => {
         const jsontoken = jwt.sign({ result }, secret, {
           expiresIn: '1h',
         });
-        resp.header('authorization', jsontoken); 
+        resp.header('authorization', jsontoken);
         resp.status(200).json({
           success: 1,
           message: 'login successfully',
