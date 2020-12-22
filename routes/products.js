@@ -3,6 +3,7 @@ const {
   requireAdmin,
 } = require('../middleware/auth');
 
+const { getAllData } = require('../conexion_data/functions.js');
 /** @module products */
 module.exports = (app, nextMain) => {
   /**
@@ -28,6 +29,13 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    */
   app.get('/products', requireAuth, (req, resp, next) => {
+    const page = parseInt(req.query.page); // pagina de listado a consultar
+    const limit = parseInt(req.query.limit); // Cantitad de elementos por página
+    const host = req.get('host'); // parametro de la paginacion
+
+    getAllData('products', page, limit, host)
+      .then((result) => resp.status(200).send(result))
+      .catch(() => resp.status(404).send('no products'));
   });
 
   /**
@@ -48,6 +56,7 @@ module.exports = (app, nextMain) => {
    * @code {404} si el producto con `productId` indicado no existe
    */
   app.get('/products/:productId', requireAuth, (req, resp, next) => {
+
   });
 
   /**
@@ -74,7 +83,6 @@ module.exports = (app, nextMain) => {
    */
   app.post('/products', requireAdmin, (req, resp, next) => {
   });
-
 
   /**
    * @name PUT /products

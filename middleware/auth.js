@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 const jwt = require('jsonwebtoken');
-const conexion = require('../database');
+const { conexion } = require('../database');
 
 module.exports = (secret) => (req, resp, next) => {
   const { authorization } = req.headers;
@@ -52,4 +52,4 @@ module.exports.isAdmin = (req) => {
 module.exports.requireAuth = (req, resp, next) => (!module.exports.isAuthenticated(req) ? next(401) : next());
 
 // eslint-disable-next-line max-len
-module.exports.requireAdmin = (req, resp, next) => (!module.exports.isAuthenticated(req)? next(401): !module.exports.isAdmin(req) ? next(403): next());
+module.exports.requireAdmin = (req, resp, next) => (!module.exports.isAuthenticated(req) ? next(401) : !module.exports.isAdmin(req) ? next(403) : next());
