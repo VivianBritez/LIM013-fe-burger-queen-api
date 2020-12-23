@@ -1,11 +1,12 @@
 const { conexion } = require('../database');
 
-const getAllData = (table, page, limit, host) => new Promise((resolve, reject) => {
+// , page, limit, host
+const getAllData = (table) => new Promise((resolve, reject) => {
   console.log('hola');
   conexion.query(`SELECT * FROM ${table}`, (error, result) => {
     if (result.length) {
-      const totalData = result.length;
-      const startIndex = (page - 1) * limit;
+    /*  const totalData = result.length;
+       const startIndex = (page - 1) * limit;
       const endIndex = page * limit;
       result = result.slice(startIndex, endIndex);
       const findResult = {};
@@ -23,11 +24,30 @@ const getAllData = (table, page, limit, host) => new Promise((resolve, reject) =
         findResult.first = `<http://${host}/${table}?page=1&limit=${limit}>`;
         findResult.last = `<http://${host}/${table}?page=1&limit=${limit}>`;
         resolve(findResult);
-      }
+      } */
+      resolve(result);
     } else {
       reject(error);
     }
   });
 });
 
-module.exports = { getAllData };
+const dataById = (table, value) => new Promise((resolve, reject) => {
+  console.log('hola');
+  conexion.query(`SELECT * FROM ${table} WHERE id =?`, value, (error, result) => {
+    if (result.length > 0) {
+      resolve(result);
+    } else {
+      reject(error);
+    }
+  });
+});
+
+const createData = (table, value) => new Promise((resolve, reject) => {
+  conexion.query(`INSERT INTO ${table} SET ? `, value, (error, result) => {
+    resolve(result);
+    reject(error);
+  });
+});
+
+module.exports = { getAllData, dataById, createData };

@@ -24,8 +24,6 @@ module.exports = (app, nextMain) => {
     if (!email || !password) {
       return next(400);
     }
-
-    // 
     const sql = `SELECT * FROM users WHERE email = "${email}" `;
     conexion.query(sql, (error, result) => {
       if (error) throw error;

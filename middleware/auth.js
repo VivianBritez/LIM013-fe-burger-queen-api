@@ -4,6 +4,7 @@ const { conexion } = require('../database');
 
 module.exports = (secret) => (req, resp, next) => {
   const { authorization } = req.headers;
+  console.info(authorization);
   if (!authorization) {
     return next();
   }
@@ -12,11 +13,13 @@ module.exports = (secret) => (req, resp, next) => {
   if (type.toLowerCase() !== 'bearer') {
     return next();
   }
-
+  console.info("token and type", token, type);
   jwt.verify(token, secret, (err, decodedToken) => {
+    console.info("jwt veryfi", token, secret);
     if (err) {
       return next(403);
     }
+    console.info(decodedToken);
     // TODO: Verificar identidad del usuario usando `decodeToken.uid`
     const sql = `SELECT * FROM users WHERE email = "${decodedToken.result[0].email}" `;
 

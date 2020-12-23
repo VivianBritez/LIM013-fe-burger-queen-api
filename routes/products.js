@@ -3,7 +3,7 @@ const {
   requireAdmin,
 } = require('../middleware/auth');
 
-const { getAllData } = require('../conexion_data/functions.js');
+const { getAllData, dataById, createData } = require('../conexion_data/functions.js');
 /** @module products */
 module.exports = (app, nextMain) => {
   /**
@@ -29,11 +29,11 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    */
   app.get('/products', requireAuth, (req, resp, next) => {
-    const page = parseInt(req.query.page); // pagina de listado a consultar
+    /*  const page = parseInt(req.query.page); // pagina de listado a consultar
     const limit = parseInt(req.query.limit); // Cantitad de elementos por página
     const host = req.get('host'); // parametro de la paginacion
-
-    getAllData('products', page, limit, host)
+ */
+    getAllData('products')
       .then((result) => resp.status(200).send(result))
       .catch(() => resp.status(404).send('no products'));
   });
@@ -56,7 +56,13 @@ module.exports = (app, nextMain) => {
    * @code {404} si el producto con `productId` indicado no existe
    */
   app.get('/products/:productId', requireAuth, (req, resp, next) => {
-
+    const { productId } = req.params;
+    if (!productId) {
+      return resp.status(400).send('not exist');
+    }
+    dataById('products', productId)
+      .then((result) => resp.status(200).send(result))
+      .catch(() => resp.status(400).send('the products not exist'));
   });
 
   /**
@@ -81,7 +87,35 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.post('/products', requireAdmin, (req, resp, next) => {
+  app.post('/products', requireAdmin, (req, resp) => { // , next
+    console.log('estoy aqui');
+    const {
+      product, type, price, image,
+    } = req.body;
+    if (!(product && price)) {
+      return resp.status(400).send('Require name and price');
+    }
+    const dataEmptry = new Date();
+    const newProduct = {
+      product,
+      type,
+      price,
+      image,
+      dataEmptry,
+    };
+    console.log(newProduct);
+    createData('products', newProduct)
+      .then((result) => resp.status(200).send(
+        {
+          _id: result.insertId,
+          product,
+          type,
+          price,
+          image,
+          dataEmptry,
+        },
+      ))
+      .catch(() => resp.status(404).sent('producto ya existe'));
   });
 
   /**
