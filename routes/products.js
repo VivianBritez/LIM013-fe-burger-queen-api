@@ -3,7 +3,9 @@ const {
   requireAdmin,
 } = require('../middleware/auth');
 
-const { getAllData, dataById, createData } = require('../conexion_data/functions.js');
+const {
+  getAllData, dataById, createData, updateData, deleteData,
+} = require('../conexion_data/functions.js');
 /** @module products */
 module.exports = (app, nextMain) => {
   /**
@@ -95,27 +97,29 @@ module.exports = (app, nextMain) => {
     if (!(product && price)) {
       return resp.status(400).send('Require name and price');
     }
-    const dataEmptry = new Date();
+    const dateEmptry = new Date();
     const newProduct = {
       product,
       type,
       price,
       image,
-      dataEmptry,
+      dateEmptry,
     };
     console.log(newProduct);
     createData('products', newProduct)
-      .then((result) => resp.status(200).send(
-        {
-          _id: result.insertId,
-          product,
-          type,
-          price,
-          image,
-          dataEmptry,
-        },
-      ))
-      .catch(() => resp.status(404).sent('producto ya existe'));
+      .then((result) => {
+        console.log(result);
+        resp.status(200).send(
+          {
+            _id: result.insertId,
+            product,
+            type,
+            price,
+            image,
+            dateEmptry,
+          },
+        );
+      });
   });
 
   /**
@@ -142,6 +146,31 @@ module.exports = (app, nextMain) => {
    * @code {404} si el producto con `productId` indicado no existe
    */
   app.put('/products/:productId', requireAdmin, (req, resp, next) => {
+    const { productId } = req.params;
+    const {
+      product, type, price, image,
+    } = req.body;
+    const newProduct = {
+      product,
+      type,
+      price,
+      image,
+    };
+    dataById('products', productId)
+      .then(() => {
+        updateData('products', productId, newProduct)
+          .then(() => resp.status(200).send(
+            {
+              id: productId,
+              product,
+              type,
+              price,
+              image,
+
+            },
+          ));
+      })
+      .catch(() => resp.status(400).send('you are crazy falto la e'));
   });
 
   /**
@@ -163,6 +192,13 @@ module.exports = (app, nextMain) => {
    * @code {404} si el producto con `productId` indicado no existe
    */
   app.delete('/products/:productId', requireAdmin, (req, resp, next) => {
+    const { productId } = req.params;
+    dataById('products', productId)
+      .then((result) => {
+        deleteData('products', productId)
+        .then(()=> resp.status(200).send(result))
+      })
+      .catch(() => resp.status(400).send('not exist'));
   });
 
   nextMain();

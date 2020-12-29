@@ -8,15 +8,18 @@ const {
 const {
   getUsers,
 } = require('../controller/users');
-
+const {
+  getAllData, dataById, getDataByEmail, createData, updateData, deleteData,
+} = require('../conexion_data/functions');
 
 const initAdminUser = (app, next) => {
   const { adminEmail, adminPassword } = app.get('config');
   if (!adminEmail || !adminPassword) {
-    return next();
+    return next(); // 400
   }
 
   const adminUser = {
+    _id: Number('203040'),
     email: adminEmail,
     password: bcrypt.hashSync(adminPassword, 10),
     roles: { admin: true },
@@ -24,8 +27,14 @@ const initAdminUser = (app, next) => {
 
   // TODO: crear usuaria admin
   next();
+  getAllData('users')
+    .then(() => next())
+    .catch(() => {
+      console.log('no user');
+      createData('users', isadmin);
+      return next();
+    });
 };
-
 
 /*
  * Diagrama de flujo de una aplicación y petición en node - express :
@@ -76,7 +85,7 @@ module.exports = (app, next) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si no es ni admin
    */
-  app.get('/users', requireAdmin, getUsers);
+  app.get('/users', requireAdmin, (req, resp, next) => getUsers(req, resp, next, 'users'));
 
   /**
    * @name GET /users/:uid
@@ -94,7 +103,14 @@ module.exports = (app, next) => {
    * @code {403} si no es ni admin o la misma usuaria
    * @code {404} si la usuaria solicitada no existe
    */
-  app.get('/users/:uid', requireAuth, (req, resp) => {
+  app.get('/users/:uid', requireAdmin && requireAuth, (req, resp) => {
+    const { uid } = req.params;
+    if (!uid) {
+      return resp.status(400).send('data not exist');
+    }
+    dataById('users', uid)
+      .then((result) => resp.status(200).send(result))
+      .catch(() => resp.status(400).send('user not exist'));
   });
 
   /**
@@ -116,7 +132,26 @@ module.exports = (app, next) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si ya existe usuaria con ese `email`
    */
-  app.post('/users', requireAdmin, (req, resp, next) => {
+  app.post('/users', requireAdmin, (req, resp) => {
+    const { email, password, isadmin } = req.body;
+    if (!(email && password)) {
+      return resp.status(400).send('Invalid email or password');
+    }
+    const newUser = {
+      email,
+      password: bcrypt.hashSync(password, 10),
+      isadmin,
+    };
+    getDataByEmail('users', email)
+      .then(() => resp.status(403).send('users exits whith the same email'))
+      .catch(() => {
+        createData('users', newUser)
+          .then((result) => resp.status(200).send({
+            id: result.insetId,
+            email,
+            isadmin,
+          }));
+      });
   });
 
   /**
@@ -141,7 +176,26 @@ module.exports = (app, next) => {
    * @code {403} una usuaria no admin intenta de modificar sus `roles`
    * @code {404} si la usuaria solicitada no existe
    */
-  app.put('/users/:uid', requireAuth, (req, resp, next) => {
+  app.put('/users/:uid', requireAuth && requireAdmin, (req, resp) => {
+    const { uid } = req.params;
+    const { email, password, isadmin } = req.body;
+    const newUser = {
+      email,
+      password: bcrypt.hashSync(password, 10),
+      isadmin,
+    };
+    dataById('users', uid)
+      .then(() => {
+        updateData('users', uid, newUser)
+          .then(() => resp.status(200).send(
+            {
+              id: uid,
+              email,
+              isadmin,
+            },
+          ));
+      })
+      .catch(() => resp.status(404).send('users does not exits'));
   });
 
   /**
@@ -160,7 +214,14 @@ module.exports = (app, next) => {
    * @code {403} si no es ni admin o la misma usuaria
    * @code {404} si la usuaria solicitada no existe
    */
-  app.delete('/users/:uid', requireAuth, (req, resp, next) => {
+  app.delete('/users/:uid', requireAuth && requireAdmin, (req, resp) => {
+    const { uid } = req.params;
+    dataById('users', uid)
+      .then((result) => {
+        deleteData('users', uid)
+          .then(() => resp.status(200).send(result));
+      })
+      .catch(() => resp.status(404).send('users does not exist'));
   });
 
   initAdminUser(app, next);

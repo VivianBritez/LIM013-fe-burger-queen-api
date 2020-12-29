@@ -45,7 +45,7 @@ module.exports.isAuthenticated = (req) => {
 
 module.exports.isAdmin = (req) => {
   // TODO: decidir por la informacion del request si la usuaria es admin
-  if (req.user.isAdmin) {
+  if (req.user.isadmin) {
     return true;
   }
   return false;

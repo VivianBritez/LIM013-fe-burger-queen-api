@@ -33,8 +33,18 @@ const getAllData = (table) => new Promise((resolve, reject) => {
 });
 
 const dataById = (table, value) => new Promise((resolve, reject) => {
-  console.log('hola');
   conexion.query(`SELECT * FROM ${table} WHERE id =?`, value, (error, result) => {
+    if (result.length > 0) {
+      resolve(result);
+      console.log(result);
+    } else {
+      reject(error);
+    }
+  });
+});
+
+const getDataByEmail = (table, value) => new Promise((resolve, reject) => {
+  conexion.query(`SELECT * FROM ${table} WHERE email =?`, value, (error, result) => {
     if (result.length > 0) {
       resolve(result);
     } else {
@@ -43,11 +53,30 @@ const dataById = (table, value) => new Promise((resolve, reject) => {
   });
 });
 
-const createData = (table, value) => new Promise((resolve, reject) => {
-  conexion.query(`INSERT INTO ${table} SET ? `, value, (error, result) => {
+const createData = (table, values) => new Promise((resolve, reject) => {
+  conexion.query(`INSERT INTO ${table} SET ? `, values, (error, result) => {
+    // console.log(result);
     resolve(result);
     reject(error);
   });
 });
 
-module.exports = { getAllData, dataById, createData };
+const updateData = (table, value, idValue) => new Promise((resolve, reject) => {
+  conexion.query(`UPDATE ${table} SET ? WHERE id =?`, [idValue, value], (error, result) => {
+    console.log(result);
+    console.log(error);
+    resolve(result);
+    reject(error);
+  });
+});
+
+const deleteData = (table, idValue) => new Promise((resolve, reject) => {
+  conexion.query(`DELETE FROM ${table} WHERE id =?`, idValue, (error, result) => {
+    resolve(result);
+    reject(error);
+  });
+});
+
+module.exports = {
+  getAllData, dataById, createData, updateData, deleteData, getDataByEmail,
+};
