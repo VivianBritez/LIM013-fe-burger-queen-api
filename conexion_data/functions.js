@@ -56,8 +56,8 @@ const createData = (table, values) => new Promise((resolve, reject) => {
     conexion.query(`INSERT INTO ${table} SET ? `, values, (error, result) => {
         console.log(result);
         resolve(result);
-        reject(error);
-        console.info(error)
+        // reject(error);
+        // console.info(error)
     });
 });
 
