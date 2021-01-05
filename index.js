@@ -23,6 +23,17 @@ app.set('pkg', pkg);
 routes(app, (err) => {
   if (err) {
     throw err;
+
+    routes(app, (err) => {
+      if (err) {
+        throw err;
+      }
+      app.use(errorHandler);
+      app.listen(port, () => {
+        console.info(`App listening on port ${port}`);
+      });
+    });
+    console.log('conexion exitosa');
   }
   app.use(errorHandler);
   app.listen(port, () => { // starts at the port
