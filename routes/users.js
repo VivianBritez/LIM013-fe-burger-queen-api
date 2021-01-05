@@ -22,17 +22,14 @@ const initAdminUser = (app, next) => {
   if (!adminEmail || !adminPassword) {
     return next();
   }
-
+// todo crear admin user
   const adminUser = {
     _id: Number('1010101'),
     email: adminEmail,
     password: bcrypt.hashSync(adminPassword, 10),
-    isadmin: true,
+    roles: { isadmin: true },
   };
 
-  // TODO: crear usuaria admin
-  /* createData('users', adminUser)
-        .then(() => next()); */
   getAllData('users')
     .then(() => next())
     .catch(() => {
@@ -116,7 +113,7 @@ module.exports = (app, next) => {
     }
     dataById('users', uid)
       .then((result) => resp.status(200).send(result))
-      .catch(() => resp.status(400).send('user not exist'));
+      .catch(() => resp.status(404).send('user not exist'));
   });
 
   /**

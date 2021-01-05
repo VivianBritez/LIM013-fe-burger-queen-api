@@ -11,11 +11,11 @@ const app = express();
 const { conexion } = require('./database.js');
 
 conexion.connect((error) => {
-    if (error) {
-        throw error;
-    } else {
-        console.log('conexion exitosa...');
-    }
+  if (error) {
+    throw error;
+  } else {
+    console.log('conexion exitosa...');
+  }
 });
 
 // parse application/x-www-form-urlencoded --parse URL-encoded bodies
@@ -30,11 +30,11 @@ app.set('config', config); // --> variables de entorno
 app.set('pkg', pkg);
 // Registrar rutas
 routes(app, (err) => {
-    if (err) {
-        throw err;
-    }
-    app.use(errorHandler);
-    app.listen(port, () => { // starts at the port
-        console.info(`App listening on port ${port}`);
-    });
+  if (err) {
+    throw err;
+  }
+  app.use(errorHandler);
+  app.listen(port, () => { // starts at the port
+    console.info(`App listening on port ${port}`);
+  });
 });

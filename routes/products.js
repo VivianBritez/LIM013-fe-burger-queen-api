@@ -1,15 +1,15 @@
 const { requireAuth, requireAdmin } = require('../middleware/auth');
 
 const {
-    getAllData,
-    dataById,
-    createData,
-    updateData,
-    deleteData,
+  getAllData,
+  dataById,
+  createData,
+  updateData,
+  deleteData,
 } = require('../conexion_data/functions.js');
 /** @module products */
 module.exports = (app, nextMain) => {
-    /**
+  /**
      * @name GET /products
      * @description Lista productos
      * @path {GET} /products
@@ -31,13 +31,13 @@ module.exports = (app, nextMain) => {
      * @code {200} si la autenticación es correcta
      * @code {401} si no hay cabecera de autenticación
      */
-    app.get('/products', requireAuth, (req, resp, next) => {
-        getAllData('products')
-            .then((result) => resp.status(200).send(result))
-            .catch(() => resp.status(404).send('no products'));
-    });
+  app.get('/products', requireAuth, (req, resp, next) => {
+    getAllData('products')
+      .then((result) => resp.status(200).send(result))
+      .catch(() => resp.status(404).send('no products'));
+  });
 
-    /**
+  /**
      * @name GET /products/:productId
      * @description Obtiene los datos de un producto especifico
      * @path {GET} /products/:productId
@@ -54,17 +54,17 @@ module.exports = (app, nextMain) => {
      * @code {401} si no hay cabecera de autenticación
      * @code {404} si el producto con `productId` indicado no existe
      */
-    app.get('/products/:productId', requireAuth, (req, resp, next) => {
-        const { productId } = req.params;
-        if (!productId) {
-            return resp.status(400).send('not exist');
-        }
-        dataById('products', productId)
-            .then((result) => resp.status(200).send(result))
-            .catch(() => resp.status(400).send('the products not exist'));
-    });
+  app.get('/products/:productId', requireAuth, (req, resp, next) => {
+    const { productId } = req.params;
+    if (!productId) {
+      return resp.status(400).send('not exist');
+    }
+    dataById('products', productId)
+      .then((result) => resp.status(200).send(result))
+      .catch(() => resp.status(400).send('the products not exist'));
+  });
 
-    /**
+  /**
      * @name POST /products
      * @description Crea un nuevo producto
      * @path {POST} /products
@@ -86,41 +86,41 @@ module.exports = (app, nextMain) => {
      * @code {403} si no es admin
      * @code {404} si el producto con `productId` indicado no existe
      */
-    app.post('/products', requireAdmin, (req, resp) => {
-        // , next
-        console.log('estoy aqui');
-        const {
-            product,
-            type,
-            price,
-            image,
-        } = req.body;
-        if (!(product && price)) {
-            return resp.status(400).send('Require name and price');
-        }
-        const dateEmptry = new Date();
-        const newProduct = {
-            product,
-            type,
-            price,
-            image,
-            dateEmptry,
-        };
-        console.log(newProduct);
-        createData('products', newProduct).then((result) => {
-            console.log(result);
-            resp.status(200).send({
-                _id: result.insertId,
-                product,
-                type,
-                price,
-                image,
-                dateEmptry,
-            });
-        });
+  app.post('/products', requireAdmin, (req, resp) => {
+    // , next
+    // console.log('estoy aqui');
+    const {
+      product,
+      type,
+      price,
+      image,
+    } = req.body;
+    if (!(product && price)) {
+      return resp.status(400).send('Require name and price');
+    }
+    const dateEmptry = new Date();
+    const newProduct = {
+      product,
+      type,
+      price,
+      image,
+      dateEmptry,
+    };
+    console.log(newProduct);
+    createData('products', newProduct).then((result) => {
+      // console.log(result);
+      resp.status(200).send({
+        _id: result.insertId,
+        product,
+        type,
+        price,
+        image,
+        dateEmptry,
+      });
     });
+  });
 
-    /**
+  /**
      * @name PUT /products
      * @description Modifica un producto
      * @path {PUT} /products
@@ -143,34 +143,34 @@ module.exports = (app, nextMain) => {
      * @code {403} si no es admin
      * @code {404} si el producto con `productId` indicado no existe
      */
-    app.put('/products/:productId', requireAdmin, (req, resp, next) => {
-        const { productId } = req.params;
-        const {
-            product,
-            type,
-            price,
-            image,
-        } = req.body;
-        const newProduct = {
-            product,
-            type,
-            price,
-            image,
-        };
-        dataById('products', productId)
-            .then(() => {
-                updateData('products', productId, newProduct).then(() => resp.status(200).send({
-                    id: productId,
-                    product,
-                    type,
-                    price,
-                    image,
-                }));
-            })
-            .catch(() => resp.status(400).send('Not exit element to modify'));
-    });
+  app.put('/products/:productId', requireAdmin, (req, resp, next) => {
+    const { productId } = req.params;
+    const {
+      product,
+      type,
+      price,
+      image,
+    } = req.body;
+    const newProduct = {
+      product,
+      type,
+      price,
+      image,
+    };
+    dataById('products', productId)
+      .then(() => {
+        updateData('products', productId, newProduct).then(() => resp.status(200).send({
+          id: productId,
+          product,
+          type,
+          price,
+          image,
+        }));
+      })
+      .catch(() => resp.status(400).send('Not exit element to modify'));
+  });
 
-    /**
+  /**
      * @name DELETE /products
      * @description Elimina un producto
      * @path {DELETE} /products
@@ -188,14 +188,14 @@ module.exports = (app, nextMain) => {
      * @code {403} si no es ni admin
      * @code {404} si el producto con `productId` indicado no existe
      */
-    app.delete('/products/:productId', requireAdmin, (req, resp, next) => {
-        const { productId } = req.params;
-        dataById('products', productId)
-            .then((result) => {
-                deleteData('products', productId).then(() => resp.status(200).send(result));
-            })
-            .catch(() => resp.status(400).send('not exist'));
-    });
+  app.delete('/products/:productId', requireAdmin, (req, resp, next) => {
+    const { productId } = req.params;
+    dataById('products', productId)
+      .then((result) => {
+        deleteData('products', productId).then(() => resp.status(200).send(result));
+      })
+      .catch(() => resp.status(404).send('not exist'));
+  });
 
-    nextMain();
+  nextMain();
 };
