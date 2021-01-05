@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const express = require('express'); // framework of node.js
 const config = require('./config');
 const authMiddleware = require('./middleware/auth');
@@ -17,7 +18,6 @@ conexion.connect((error) => {
     console.log('conexion exitosa...');
   }
 });
-
 // parse application/x-www-form-urlencoded --parse URL-encoded bodies
 app.use(express.urlencoded({ extended: false }));
 // recognize the incoming request object as a JSON object
