@@ -6,7 +6,7 @@ const db = {
   password: process.env.DPASSWORD_DB || process.env.PASSWORD_DB,
   database: process.env.DDB_NAME || process.env.DB_NAME,
 };
-console.log(db);
+// console.log(db);
 exports.port = process.argv[2] || process.env.PORT || 8080;
 exports.dbUrl = db;
 exports.secret = process.env.JWT_SECRET;

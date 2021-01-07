@@ -3,7 +3,7 @@
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const pool = require('../db_data/bq_data');
+const conexion = require('../bk_data/bq_data');
 const config = require('../config');
 
 const { secret } = config;
@@ -29,7 +29,7 @@ module.exports = (app, nextMain) => {
     }
     // TODO: autenticar a la usuarix
     try {
-      pool.query('SELECT * FROM users', (error, result) => {
+      conexion.query('SELECT * FROM users', (error, result) => {
         if (error) throw error;
         // eslint-disable-next-line max-len
         const payload = result.find((user) => user.email === email && bcrypt.compareSync(password, user.password));

@@ -1,66 +1,31 @@
-const jwt = require('jsonwebtoken'); // middleware
-const pool = require('./db_data/bq_data.js');
+const express = require('express');
+const cors = require('cors');
+const config = require('./config');
+const authMiddleware = require('./middleware/auth');
+const errorHandler = require('./middleware/error');
+const routes = require('./routes');
+const pkg = require('./package.json');
 
-module.exports = (secret) => (req, resp, next) => {
-  const { authorization } = req.headers;
+// eslint-disable-next-line no-unused-vars
+const { port, dbUrl, secret } = config;
+const app = express(); // inicializarla
+app.use(cors());
+app.set('config', config); // settings nombre de variables
+app.set('pkg', pkg);
 
-  if (!authorization) { // si no hay token
-    return next();
+// parse application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+app.use(authMiddleware(secret)); // import the code of  middleware
+// Registrar rutas
+routes(app, (err) => {
+  if (err) {
+    throw err;
   }
+  app.use(errorHandler);
 
-  const [type, token] = authorization.split(' ');
-
-  if (type.toLowerCase() !== 'bearer') {
-    return next();
-  }
-
-  jwt.verify(token, secret, (err, decodedToken) => {
-    if (err) {
-      return next(403);
-    }
-    // TODO: Verificar identidad del usuario usando `decodedToken.uid`
-    try {
-      pool.query('SELECT * FROM users', (error, result) => {
-        if (error) { throw error; }
-        // console.log(decodedToken);
-        const userVerified = result.find((user) => user.email === decodedToken.email);
-        if (userVerified) {
-          req.user = userVerified;
-          next();
-        } else { next(404); }
-      });
-    } catch (error) {
-      next(404);
-    }
+  app.listen(port, () => { // iniciar en el puerto ${port}
+    console.info(`App listening on port ${port}`);
   });
-};
-
-module.exports.isAuthenticated = (req) => {
-  if (req.user) {
-    return true;
-  }
-  return false;
-};
-
-module.exports.isAdmin = (req) => {
-  // TODO: decidir por la informacion del request si la usuaria es admin
-  if (req.user.rolesAdmin) {
-    return true;
-  }
-  return false;
-};
-
-module.exports.requireAuth = (req, resp, next) => (
-  (!module.exports.isAuthenticated(req))
-    ? next(401)
-    : next()
-);
-
-module.exports.requireAdmin = (req, resp, next) => (
-  // eslint-disable-next-line no-nested-ternary
-  (!module.exports.isAuthenticated(req))
-    ? next(401)
-    : (!module.exports.isAdmin(req))
-      ? next(403)
-      : next()
-);
+});

@@ -1,9 +1,10 @@
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken'); // middleware
+const conexion = require('../bk_data/bq_data');
 
 module.exports = (secret) => (req, resp, next) => {
   const { authorization } = req.headers;
 
-  if (!authorization) {
+  if (!authorization) { // si no hay token
     return next();
   }
 
@@ -17,20 +18,37 @@ module.exports = (secret) => (req, resp, next) => {
     if (err) {
       return next(403);
     }
-
-    // TODO: Verificar identidad del usuario usando `decodeToken.uid`
+    // TODO: Verificar identidad del usuario usando `decodedToken.uid`
+    try {
+      conexion.query('SELECT * FROM users', (error, result) => {
+        if (error) { throw error; }
+        // console.log(decodedToken);
+        const userVerified = result.find((user) => user.email === decodedToken.email);
+        if (userVerified) {
+          req.user = userVerified;
+          next();
+        } else { next(404); }
+      });
+    } catch (error) {
+      next(404);
+    }
   });
 };
 
-module.exports.isAuthenticated = (req) => (
-  // TODO: decidir por la informacion del request si la usuaria esta autenticada
-  false
-);
+module.exports.isAuthenticated = (req) => {
+  if (req.user) {
+    return true;
+  }
+  return false;
+};
 
-module.exports.isAdmin = (req) => (
+module.exports.isAdmin = (req) => {
   // TODO: decidir por la informacion del request si la usuaria es admin
-  false
-);
+  if (req.user.rolesAdmin) {
+    return true;
+  }
+  return false;
+};
 
 module.exports.requireAuth = (req, resp, next) => (
   (!module.exports.isAuthenticated(req))

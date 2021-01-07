@@ -9,7 +9,9 @@
   "scripts": {
     "pretest": "eslint .",
     "start": "node index.js",
-    "test:e2e": "jest --verbose --testPathPattern e2e --globalSetup ./e2e/globalSetup --globalTeardown ./e2e/globalTeardown --runInBand",
+    "dev": "nodemon index.js",
+    "test:e2e": "jest --verbose --testPathPattern e2e/auth.spec.js --globalSetup ./e2e/globalSetup --globalTeardown ./e2e/globalTeardown --runInBand",
+    "test:users": "jest --verbose --testPathPattern e2e/users.spec.js --globalSetup ./e2e/globalSetup --globalTeardown ./e2e/globalTeardown --runInBand",
     "test:unit": "jest --verbose --testPathIgnorePatterns e2e",
     "test": "npm run test:e2e && npm run test:unit",
     "lint": "eslint .",
@@ -19,6 +21,7 @@
   "dependencies": {
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
@@ -34,7 +37,7 @@
     "jsdoc": "^3.6.6",
     "jsdoc-http-plugin": "^0.3.2",
     "node-fetch": "^2.6.1",
-    "nodemon": "^2.0.6",
+    "nodemon": "^2.0.7",
     "tree-kill": "^1.2.2"
   }
 }

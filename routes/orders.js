@@ -30,6 +30,7 @@ module.exports = (app, nextMain) => {
    * @code {200} si la autenticación es correcta
    * @code {401} si no hay cabecera de autenticación
    */
+  // eslint-disable-next-line no-unused-vars
   app.get('/orders', requireAuth, (req, resp, next) => {
   });
 
@@ -54,6 +55,7 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {404} si la orden con `orderId` indicado no existe
    */
+  // eslint-disable-next-line no-unused-vars
   app.get('/orders/:orderId', requireAuth, (req, resp, next) => {
   });
 
@@ -83,6 +85,7 @@ module.exports = (app, nextMain) => {
    * @code {400} no se indica `userId` o se intenta crear una orden sin productos
    * @code {401} si no hay cabecera de autenticación
    */
+  // eslint-disable-next-line no-unused-vars
   app.post('/orders', requireAuth, (req, resp, next) => {
   });
 
@@ -114,6 +117,7 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {404} si la orderId con `orderId` indicado no existe
    */
+  // eslint-disable-next-line no-unused-vars
   app.put('/orders/:orderId', requireAuth, (req, resp, next) => {
   });
 
@@ -138,6 +142,7 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {404} si el producto con `orderId` indicado no existe
    */
+  // eslint-disable-next-line no-unused-vars
   app.delete('/orders/:orderId', requireAuth, (req, resp, next) => {
   });
 

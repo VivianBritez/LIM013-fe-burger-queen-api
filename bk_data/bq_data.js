@@ -3,14 +3,14 @@ const mysql = require('mysql');
 const config = require('../config');
 
 const { dbUrl } = config;
-const pool = mysql.createConnection(dbUrl);
+const conexion = mysql.createConnection(dbUrl);
 // eslint-disable-next-line no-console
-// console.log(pool.state);
-pool.connect();
+// console.log(conexion.state);
+conexion.connect();
 
 const createTable = (table, values) => {
   const sql = `CREATE TABLE IF NOT EXISTS ${table} ${values}`;
-  pool.query(sql, (err, result) => {
+  conexion.query(sql, (err, result) => {
     if (err) throw err;
   });
 };
@@ -23,4 +23,4 @@ createTable('users', userValues);
 createTable('products', productsValues);
 createTable('orders_products', ordersProductsValues);
 createTable('orders', ordersValues);
-module.exports = pool;
+module.exports = conexion;
