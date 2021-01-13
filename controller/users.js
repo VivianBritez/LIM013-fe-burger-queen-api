@@ -1,14 +1,15 @@
 const { pagination } = require('../utils/utils');
-const { getAllData } = require('../bk_data/functiones');
+const { getAllData, getDataByKeyword } = require('../bk_data/functiones');
 
 module.exports = {
-  getUsers: (req, resp, next, table) => {
+  getData: (req, resp, next, table) => {
     const { page, limit } = req.query;
     const pages = Number(page);
     const limits = Number(limit);
+    const host = req.get('host');
     getAllData(table)
       .then((result) => {
-        const response = pagination(pages, limits, result, table);
+        const response = pagination(pages, limits, result, table, host);
         resp.header('link', response.link);
         if (response.list) {
           const jsonUserResp = response.list.map((x) => {
@@ -21,11 +22,37 @@ module.exports = {
             };
           });
           // eslint-disable-next-line array-callback-return
+          const jsonProductResp = response.list.map((x) => {
+          // eslint-disable-next-line no-param-reassign
+            x._id = (!x._id) ? 0 : (x._id).toString();
+            return x;
+          });
 
-          // eslint-disable-next-line no-console
+          const variable = response.list.map((order) => getDataByKeyword('orders_products', 'orderId', order._id)
+            .then((array) => {
+              const arrayOrder = array.map((element) => getDataByKeyword('products', '_id', element.productId)
+                .then((product) => ({
+                  qty: element.qty,
+                  product: product[0],
+                })));
+              return Promise.all(arrayOrder)
+                .then((producto) => {
+                  order.products = producto;
+                  return order;
+                // return resp.status(200).send(order);
+                });
+            }));
           switch (table) {
             case 'users':
               return resp.status(200).send(jsonUserResp);
+            case 'products':
+              return resp.status(200).send(jsonProductResp);
+            // case 'orders':
+            case 'orders':
+              return Promise.all(variable).then((result) => {
+                resp.status(200).send(result);
+              });
+
             default:
               break;
           }

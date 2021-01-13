@@ -5,8 +5,10 @@ const orders = require('./orders');
 
 const root = (app, next) => {
   const pkg = app.get('pkg');
+  // recibir una función get con un objeto resq(lo que el navegador me envia)
+  // recibir con un objeto res (objeto voy a devolver al navegador)
   app.get('/', (req, res) => res.json({ name: pkg.name, version: pkg.version }));
-  app.all('*', (req, resp, nextAll) => nextAll(404));
+  app.all('*', (req, resp, nextAll) => nextAll(404)); // cualquier ruta no encontrada
   return next();
 };
 

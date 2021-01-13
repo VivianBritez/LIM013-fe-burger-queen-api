@@ -1,3 +1,6 @@
+jest.setTimeout(500000);
+
+/* eslint-disable no-console */
 const url = require('url');
 const qs = require('querystring');
 const config = require('../config');
@@ -150,11 +153,12 @@ describe('POST /users', () => {
   ));
 
   it('should create new user', () => (
+    // si los crea passed
     fetchAsAdmin('/users', {
       method: 'POST',
       body: {
         email: 'test1@test.test',
-        password: '12345',
+        password: '123456',
         roles: { admin: false },
       },
     })
@@ -172,11 +176,12 @@ describe('POST /users', () => {
   ));
 
   it('should create new admin user', () => (
+    // SI LO CREA EN DB
     fetchAsAdmin('/users', {
       method: 'POST',
       body: {
         email: 'admin1@test.test',
-        password: '12345',
+        password: '123456', // adding 6
         roles: { admin: true },
       },
     })
@@ -283,7 +288,7 @@ describe('DELETE /users/:uid', () => {
   ));
 
   it('should delete own user', () => {
-    const credentials = { email: `foo-${Date.now()}@bar.baz`, password: '1234' };
+    const credentials = { email: `foo-${Date.now()}@bar.baz`, password: '123456' };
     return fetchAsAdmin('/users', { method: 'POST', body: credentials })
       .then((resp) => expect(resp.status).toBe(200))
       .then(() => fetch('/auth', { method: 'POST', body: credentials }))
@@ -300,7 +305,7 @@ describe('DELETE /users/:uid', () => {
   });
 
   it('should delete other user as admin', () => {
-    const credentials = { email: `foo-${Date.now()}@bar.baz`, password: '1234' };
+    const credentials = { email: `foo-${Date.now()}@bar.baz`, password: '123456' };
     return fetchAsAdmin('/users', { method: 'POST', body: credentials })
       .then((resp) => expect(resp.status).toBe(200))
       .then(() => fetchAsAdmin(`/users/${credentials.email}`, { method: 'DELETE' }))

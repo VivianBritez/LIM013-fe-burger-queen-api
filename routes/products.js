@@ -3,6 +3,14 @@ const {
   requireAdmin,
 } = require('../middleware/auth');
 
+const { getData } = require('../controller/users');
+
+const {
+  getDataByKeyword, createData, updateDataByKeyword, deleteData,
+} = require('../bk_data/functiones');
+
+const { dataError } = require('../utils/utils');
+
 /** @module products */
 module.exports = (app, nextMain) => {
   /**
@@ -27,9 +35,8 @@ module.exports = (app, nextMain) => {
    * @code {200} si la autenticación es correcta
    * @code {401} si no hay cabecera de autenticación
    */
-  // eslint-disable-next-line no-unused-vars
-  app.get('/products', requireAuth, (req, resp, next) => {
-  });
+
+  app.get('/products', requireAuth, (req, resp, next) => getData(req, resp, next, 'products'));
 
   /**
    * @name GET /products/:productId
@@ -48,8 +55,19 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {404} si el producto con `productId` indicado no existe
    */
-  // eslint-disable-next-line no-unused-vars
-  app.get('/products/:productId', requireAuth, (req, resp, next) => {
+  app.get('/products/:id', requireAuth, (req, resp, next) => {
+    const { id } = req.params;
+    if (!(id) || !req.headers.authorization) {
+      // dataError(!id, !req.headers.authorization, resp);
+      return dataError(!id, !req.headers.authorization, resp);
+    }
+    getDataByKeyword('products', '_id', id)
+      .then((result) => {
+        // eslint-disable-next-line no-param-reassign
+        result[0]._id = id.toString();
+        return resp.status(200).send(result[0]);
+      })
+      .catch(() => resp.status(404).send({ message: 'El producto solicitado no existe' }));
   });
 
   /**
@@ -72,10 +90,34 @@ module.exports = (app, nextMain) => {
    * @code {400} si no se indican `name` o `price`
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si no es admin
-   * @code {404} si el producto con `productId` indicado no existe
+   * @code {404} si el producto ya existe
    */
-  // eslint-disable-next-line no-unused-vars
   app.post('/products', requireAdmin, (req, resp, next) => {
+    const {
+      name, price, image, type,
+    } = req.body;
+    if (!(name && price) || !req.headers.authorization) {
+      return dataError(!(name && price), !req.headers.authorization, resp);
+    }
+    const date = new Date();
+
+    const newProduct = {
+      name,
+      price,
+      image,
+      type,
+      dateEntry: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
+    };
+    getDataByKeyword('products', 'name', name)
+      .then(() => resp.status(404).send({ message: `Ya existe un producto con el nombre: ${name}` }))
+      .catch(() => {
+        createData('products', newProduct)
+          .then((result) => {
+            // eslint-disable-next-line no-param-reassign
+            newProduct._id = (result.insertId).toString();
+            return resp.status(200).send(newProduct);
+          });
+      });
   });
 
   /**
@@ -101,31 +143,74 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  // eslint-disable-next-line no-unused-vars
-  app.put('/products/:productId', requireAdmin, (req, resp, next) => {
+
+  app.put('/products/:id', requireAdmin, (req, resp, next) => {
+    const { id } = req.params;
+    const {
+      name, price, image, type,
+    } = req.body;
+    const date = new Date();
+    if (!(name || price || image || type) || !req.headers.authorization) {
+      return dataError(!(name || price || image || type), !req.headers.authorization, resp);
+    // eslint-disable-next-line no-restricted-globals
+    } if (isNaN(price) && price !== undefined) {
+      return resp.status(400).send('Price have to do a number');
+    }
+
+    const newProduct = {
+      ...((name) && { name }),
+      ...((type) && { type }),
+      ...((price) && { price }),
+      ...((image) && { image }),
+      dateEntry: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
+    };
+    getDataByKeyword('products', '_id', id)
+      .then(() => {
+        updateDataByKeyword('products', newProduct, '_id', id)
+          .then(() => {
+            getDataByKeyword('products', '_id', id)
+              .then((product) => {
+                // eslint-disable-next-line no-param-reassign
+                product[0]._id = id.toString();
+                return resp.status(200).send(product[0]);
+              });
+          });
+      })
+      .catch(() => resp.status(404).send({ message: `No existe producto con ese id : ${id}` }));
   });
 
   /**
    * @name DELETE /products
-   * @description Elimina un producto
-   * @path {DELETE} /products
-   * @params {String} :productId `id` del producto
+   * @description Elimina un producto ✓
+   * @path {DELETE} /products ✓
+   * @params {String} :productId `id` del producto ✓
    * @auth Requiere `token` de autenticación y que el usuario sea **admin**
-   * @response {Object} product
+   * @response {Object} product✓
    * @response {String} product._id Id
    * @response {String} product.name Nombre
    * @response {Number} product.price Precio
    * @response {URL} product.image URL a la imagen
    * @response {String} product.type Tipo/Categoría
-   * @response {Date} product.dateEntry Fecha de creación
-   * @code {200} si la autenticación es correcta
-   * @code {401} si no hay cabecera de autenticación
-   * @code {403} si no es ni admin
-   * @code {404} si el producto con `productId` indicado no existe
+   * @response {Date} product.dateEntry Fecha de creación  ✓
+   * @code {200} si la autenticación es correcta ✓
+   * @code {401} si no hay cabecera de autenticación ✓
+   * @code {403} si no es ni admin ✓
+   * @code {404} si el producto con `productId` indicado no existe ✓
    */
-  // eslint-disable-next-line no-unused-vars
-  app.delete('/products/:productId', requireAdmin, (req, resp, next) => {
+  app.delete('/products/:id', requireAdmin, (req, resp, next) => {
+    const { id } = req.params;
+    if (!id || !req.headers.authorization) {
+      return dataError(!id, !req.headers.authorization, resp);
+    }
+    getDataByKeyword('products', '_id', id)
+      .then((product) => {
+        deleteData('products', '_id', id);
+        // eslint-disable-next-line no-param-reassign
+        product[0]._id = id.toString();
+        return resp.status(200).send(product[0]);
+        // resp.status(403).send({ message: `El producto con id ${id} no existe.` });
+      })
+      .catch(() => resp.status(404).send({ message: `No existe el producto con id ${id}.` }));
   });
-
   nextMain();
 };

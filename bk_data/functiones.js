@@ -14,6 +14,7 @@ const getDataByKeyword = (table, keyword, value) => new Promise((resolve, reject
   conexion.query(`SELECT * FROM ${table} WHERE ${keyword}=?`, value, (error, result) => {
     if (result.length > 0) {
       resolve(result);
+      console.log('soy get data by keyword', result);
     } else {
       reject(error);
     }
@@ -23,7 +24,9 @@ const getDataByKeyword = (table, keyword, value) => new Promise((resolve, reject
 const createData = (table, toInsert) => new Promise((resolve, reject) => {
   conexion.query(`INSERT INTO ${table} SET ?`, toInsert, (error, result) => {
     resolve(result);
+    console.log('SOY RESULT CREATE DATA', result);
     reject(error);
+    console.log('SOY error CREATE DATA', error);
   });
 });
 

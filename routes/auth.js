@@ -1,10 +1,7 @@
-/* eslint-disable no-console */
-/* eslint-disable no-unused-vars */
-
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const conexion = require('../bk_data/bq_data');
 const config = require('../config');
+const pool = require('../bk_data/bq_data');
 
 const { secret } = config;
 
@@ -29,7 +26,7 @@ module.exports = (app, nextMain) => {
     }
     // TODO: autenticar a la usuarix
     try {
-      conexion.query('SELECT * FROM users', (error, result) => {
+      pool.query('SELECT * FROM users', (error, result) => {
         if (error) throw error;
         // eslint-disable-next-line max-len
         const payload = result.find((user) => user.email === email && bcrypt.compareSync(password, user.password));
