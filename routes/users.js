@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const bcrypt = require('bcrypt');
 
 const {
@@ -8,7 +9,7 @@ const {
 const { getData } = require('../controller/users');
 
 const {
-  getDataByKeyword, createData, updateDataByKeyword, deleteData, getAllData,
+  getDataByKeyword, createData, updateDataByKeyword, deleteData, getDataByEmail,
 } = require('../bk_data/functiones');
 
 const { dataError } = require('../utils/utils');
@@ -31,12 +32,15 @@ const initAdminUser = (app, next) => {
     rolesAdmin: true,
   };
   // TODO: crear usuaria admin
-  getAllData('users')
+  getDataByEmail('users', adminUser.email)
     .then(() => next())
     .catch(() => {
+      // eslint-disable-next-line no-console
       console.log('no user');
-      createData('users', adminUser);
-      return next();
+      createData('users', adminUser)
+        .then(() => {
+          next();
+        });
     });
 };
 
@@ -150,7 +154,8 @@ module.exports = (app, next) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si ya existe usuaria con ese `email`
    */
-  app.post('/users', requireAdmin, (_req, resp, _next) => {
+  // eslint-disable-next-line no-unused-vars
+  app.post('/users', requireAdmin, (_req, resp, next) => {
     // Para verificar valores
     const { email, password, roles } = _req.body;
 
@@ -203,6 +208,7 @@ module.exports = (app, next) => {
    * @code {403} una usuaria no admin intenta de modificar sus `roles`
    * @code {404} si la usuaria solicitada no existe
    */
+  // eslint-disable-next-line no-unused-vars
   app.put('/users/:str', requireAdmin && requireAuth, (_req, _resp, _next) => {
     const { str } = _req.params;
     const { email, password, roles } = _req.body;

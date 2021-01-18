@@ -1,7 +1,8 @@
+/* eslint-disable no-console */
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const config = require('../config');
-const pool = require('../bk_data/bq_data');
+const pool = require('../bk_data/data');
 
 const { secret } = config;
 

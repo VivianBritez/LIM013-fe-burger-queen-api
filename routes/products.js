@@ -55,6 +55,7 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {404} si el producto con `productId` indicado no existe
    */
+  // eslint-disable-next-line no-unused-vars
   app.get('/products/:id', requireAuth, (req, resp, next) => {
     const { id } = req.params;
     if (!(id) || !req.headers.authorization) {
@@ -92,6 +93,7 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es admin
    * @code {404} si el producto ya existe
    */
+  // eslint-disable-next-line no-unused-vars
   app.post('/products', requireAdmin, (req, resp, next) => {
     const {
       name, price, image, type,
@@ -144,6 +146,7 @@ module.exports = (app, nextMain) => {
    * @code {404} si el producto con `productId` indicado no existe
    */
 
+  // eslint-disable-next-line no-unused-vars
   app.put('/products/:id', requireAdmin, (req, resp, next) => {
     const { id } = req.params;
     const {
@@ -197,6 +200,7 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es ni admin ✓
    * @code {404} si el producto con `productId` indicado no existe ✓
    */
+  // eslint-disable-next-line no-unused-vars
   app.delete('/products/:id', requireAdmin, (req, resp, next) => {
     const { id } = req.params;
     if (!id || !req.headers.authorization) {

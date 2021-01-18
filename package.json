@@ -10,10 +10,11 @@
     "pretest": "eslint .",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test:e2e": "jest --verbose --testPathPattern e2e/auth.spec.js --globalSetup ./e2e/globalSetup --globalTeardown ./e2e/globalTeardown --runInBand",
+    "test:e2e": "jest --verbose --forceExit --testPathPattern e2e/ --globalSetup ./e2e/globalSetup --globalTeardown ./e2e/globalTeardown --runInBand",
+    "test:e": "jest --verbose --detectOpenHandles --testPathPattern e2e/ --globalSetup ./e2e/globalSetup --globalTeardown ./e2e/globalTeardown --runInBand",
     "test:users": "jest --verbose --testPathPattern e2e/users.spec.js --globalSetup ./e2e/globalSetup --globalTeardown ./e2e/globalTeardown --runInBand",
     "test:products": "jest --verbose --testPathPattern e2e/products.spec.js --globalSetup ./e2e/globalSetup --globalTeardown ./e2e/globalTeardown --runInBand",
-    "test:orders": "jest --verbose --testPathPattern e2e/orders.spec.js --globalSetup ./e2e/globalSetup --globalTeardown ./e2e/globalTeardown --runInBand",
+    "test:orders": "jest --verbose --forceExit --testPathPattern e2e/orders.spec.js --globalSetup ./e2e/globalSetup --globalTeardown ./e2e/globalTeardown --runInBand",
     "test:unit": "jest --verbose --testPathIgnorePatterns e2e",
     "test": "npm run test:e2e && npm run test:unit",
     "lint": "eslint .",
@@ -41,5 +42,15 @@
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.7",
     "tree-kill": "^1.2.2"
-  }
+  },
+  "description": "* [1. Preámbulo](#1-pre%C3%A1mbulo)\r * [2. Resumen del proyecto](#2-resumen-del-proyecto)\r * [3. Objetivos de aprendizaje](#3-objetivos-de-aprendizaje)\r * [4. Consideraciones generales](#4-consideraciones-generales)\r * [5. Criterios de aceptación mínimos del proyecto](#5-criterios-de-aceptaci%C3%B3n-m%C3%ADnimos-del-proyecto)\r * [6. Pistas, tips y lecturas complementarias](#6-pistas-tips-y-lecturas-complementarias)\r * [7 HTTP API Checklist](#7-http-api-checklist)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VivianBritez/LIM013-fe-burger-queen-api.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/VivianBritez/LIM013-fe-burger-queen-api/issues"
+  },
+  "homepage": "https://github.com/VivianBritez/LIM013-fe-burger-queen-api#readme"
 }

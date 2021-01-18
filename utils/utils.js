@@ -42,7 +42,7 @@ const getOrderProduct = (orderId, dataTableOrder, resp) => {
         const productID = p.productId;
         return getDataByKeyword('products', '_id', productID);
       });
-      Promise.all(dataProduct).then((values) => {
+      return Promise.all(dataProduct).then((values) => {
         order.products = values.flat().map((e) => {
           e._id = (e._id).toString();
           return {
@@ -50,9 +50,11 @@ const getOrderProduct = (orderId, dataTableOrder, resp) => {
           };
         });
         order.products.forEach((x, i) => {
+          // eslint-disable-next-line no-param-reassign
           x.qty = products[i].qty;
         });
-        console.log(order);
+        // eslint-disable-next-line no-console
+        console.log('soy order', order);
         return resp.status(200).send(order);
       })
         .catch((error) => console.error(error));

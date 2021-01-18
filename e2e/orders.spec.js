@@ -1,4 +1,4 @@
-jest.setTimeout(10000);
+jest.setTimeout(1000000);
 const { getDataByKeyword } = require('../bk_data/functiones');
 
 const {

@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const { pagination } = require('../utils/utils');
 const { getAllData, getDataByKeyword } = require('../bk_data/functiones');
 
@@ -58,6 +59,7 @@ module.exports = {
           }
         }
         return resp.status(404).send('Page not found');
-      });
+      })
+      .catch(() => next(500));
   },
 };
