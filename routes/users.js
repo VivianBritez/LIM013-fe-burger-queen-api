@@ -249,7 +249,7 @@ module.exports = (app, next) => {
               },
             )));
       })
-      .catch(() => _resp.status(404).send({ message: `El usuario con id ${str} no existe.` }));
+      .catch(() => _resp.status(404).send({ message: `The user with that ${str} does not exits.` }));
   });
 
   /**
@@ -290,7 +290,7 @@ module.exports = (app, next) => {
         deleteData('users', keyword, str);
         _resp.status(200).send(userDeleted);
       })
-      .catch(() => _resp.status(404).send({ message: `No existe el usuario con id ${str}` }));
+      .catch(() => _resp.status(404).send({ message: `User with id does not exist${str}` }));
   });
   initAdminUser(app, next);
 };

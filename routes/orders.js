@@ -70,7 +70,7 @@ module.exports = (app, nextMain) => {
         console.info(ordersSwitch);
         if (ordersSwitch) { getOrderProduct(orderId, result, resp); } else { next(500); }
       })
-      .catch(() => resp.status(404).send({ message: 'El producto solicitado no existe' }));
+      .catch(() => resp.status(404).send({ message: 'The requested order does not exist' }));
   });
 
   /**
@@ -224,7 +224,7 @@ module.exports = (app, nextMain) => {
             }
           });
       })
-      .catch(() => resp.status(404).send({ message: `No existe orden con ese id : ${orderId}` }));
+      .catch(() => resp.status(404).send({ message: `There is no order with that id : ${orderId}` }));
   });
 
   /**
@@ -259,7 +259,7 @@ module.exports = (app, nextMain) => {
         getOrderProduct(orderId, result, resp);
         deleteData('orders', '_id', orderId);
       })
-      .catch(() => resp.status(404).send({ message: `No existe el producto con id ${orderId}.` }));
+      .catch(() => resp.status(404).send({ message: `The requested order does not exist ${orderId}.` }));
   });
 
   nextMain();
