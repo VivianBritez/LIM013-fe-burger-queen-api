@@ -1,38 +1,41 @@
 const express = require('express');
-const mysql = require('mysql');
-const { database } = require('./database.js');
+const cors = require('cors');
 const config = require('./config');
 const authMiddleware = require('./middleware/auth');
 const errorHandler = require('./middleware/error');
 const routes = require('./routes');
 const pkg = require('./package.json');
+const conexion = require('./bk_data/data');
 
+// eslint-disable-next-line no-unused-vars
 const { port, dbUrl, secret } = config;
-const app = express();
-// TODO: Conexión a la Base de Datos (MongoDB o MySQL)
-const conexion = mysql.createConnection(database);
+const app = express(); // inicializarla
+app.use(cors());
+
 conexion.connect((error) => {
   if (error) {
     throw error;
   } else {
-    // parse application/x-www-form-urlencoded
-    app.use(express.urlencoded({ extended: false }));
-    app.use(express.json());
-    app.use(authMiddleware(secret));
-    app.set('config', config);
-    app.set('pkg', pkg);
-    // Registrar rutas
-    routes(app, (err) => {
-      if (err) {
-        throw err;
-      }
-      app.use(errorHandler);
-      app.listen(port, () => {
-        console.info(`App listening on port ${port}`);
-      });
-    });
-    console.log('conexion exitosa');
+    // eslint-disable-next-line no-console
+    console.log('conexion exitosa...');
   }
 });
+app.set('config', config); // settings nombre de variables
+app.set('pkg', pkg);
 
-conexion.end();
+// parse application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+app.use(authMiddleware(secret)); // import the code of  middleware
+// Registrar rutas
+routes(app, (err) => {
+  if (err) {
+    throw err;
+  }
+  app.use(errorHandler);
+
+  app.listen(port, () => { // iniciar en el puerto ${port}
+    console.info(`App listening on port ${port}`);
+  });
+});
