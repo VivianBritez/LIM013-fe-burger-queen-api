@@ -13,10 +13,10 @@ const createTable = (table, values) => {
     if (err) throw err;
   });
 };
-const userValues = '(_id int NOT NULL AUTO_INCREMENT,email VARCHAR(30), `password` text, rolesAdmin boolean, PRIMARY KEY (_id))';
+const userValues = '(_id int NOT NULL AUTO_INCREMENT,email VARCHAR(100), `password` text, rolesAdmin boolean, PRIMARY KEY (_id))';
 const productsValues = '(_id INTEGER NOT NULL AUTO_INCREMENT, name varchar(50), price float(2), image text, type varchar(50), dateEntry date, primary key (_id))';
-const ordersProductsValues = '(orderId integer, qty integer, productId integer)';
-const ordersValues = '(_id INTEGER NOT NULL AUTO_INCREMENT, userId INTEGER NOT NULL, client varchar(20), status varchar(20), dateEntry date, dateProcessed date, primary key (_id))';
+const ordersProductsValues = '(orderId integer, qty integer, productId integer, foreign key (orderId) references orders(_id) ON DELETE CASCADE, foreign key (productId) references products(_id) ON DELETE CASCADE)';
+const ordersValues = '(_id INTEGER NOT NULL AUTO_INCREMENT, userId INTEGER NOT NULL, client varchar(20), status varchar(20), dateEntry date, dateProcessed date, primary key (_id), foreign key (userId) references users(_id) ON DELETE cascade)';
 
 createTable('users', userValues);
 createTable('products', productsValues);

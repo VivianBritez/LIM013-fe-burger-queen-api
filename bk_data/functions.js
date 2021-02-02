@@ -38,6 +38,7 @@ const getDataByEmail = (table, value) => new Promise((resolve, reject) => {
 const createData = (table, toInsert) => new Promise((resolve, reject) => {
   conexion.query(`INSERT INTO ${table} SET ?`, toInsert, (error, result) => {
     resolve(result);
+    console.info(result)
     // eslint-disable-next-line no-console
     // console.log('SOY RESULT CREATE DATA', result);
     reject(error);

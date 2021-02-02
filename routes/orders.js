@@ -37,7 +37,6 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    */
   app.get('/orders', requireAuth, (req, resp, next) => getData(req, resp, next, 'orders'));
-
   /**
    * @name GET /orders/:orderId
    * @description Obtiene los datos de una orden especifico
@@ -66,11 +65,9 @@ module.exports = (app, nextMain) => {
     }
     getDataByKeyword('orders', '_id', orderId)
       .then((result) => {
-        const ordersSwitch = (result[0].switch === 0);
-        console.info(ordersSwitch);
-        if (ordersSwitch) { getOrderProduct(orderId, result, resp); } else { next(500); }
+        getOrderProduct(orderId, result, resp);
       })
-      .catch(() => resp.status(404).send({ message: 'The requested order does not exist' }));
+      .catch(() => resp.status(404).send({ message: 'El producto solicitado no existe' }));
   });
 
   /**
@@ -99,7 +96,6 @@ module.exports = (app, nextMain) => {
    * @code {400} no se indica `userId` o se intenta crear una orden sin productos
    * @code {401} si no hay cabecera de autenticación
    */
-  // eslint-disable-next-line no-unused-vars
   app.post('/orders', requireAuth, (req, resp, next) => {
     const {
       userId, client, products,
@@ -113,7 +109,7 @@ module.exports = (app, nextMain) => {
       userId: Number(userId),
       client,
       status: 'pending',
-      dateEntry: date,
+      dateEntry: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
     };
     // saving orders in DB
     createData('orders', newOrder)
@@ -125,8 +121,6 @@ module.exports = (app, nextMain) => {
             qty: productObj.qty,
             productId: productObj.productId,
           };
-          // eslint-disable-next-line no-console
-          console.log('NEW ORDER PRODUCT', newOrderProduct);
           createData('orders_products', newOrderProduct);
         });
         const dataProduct = products.map((p) => {
@@ -141,7 +135,6 @@ module.exports = (app, nextMain) => {
             product: e,
           }));
           newOrder.products.forEach((x, i) => {
-            // eslint-disable-next-line no-param-reassign
             x.qty = products[i].qty;
           });
           return resp.status(200).send(newOrder);
@@ -178,7 +171,6 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {404} si la orderId con `orderId` indicado no existe
    */
-  // eslint-disable-next-line no-unused-vars
   app.put('/orders/:orderId', requireAuth, (req, resp, next) => {
     const { orderId } = req.params;
     const {
@@ -195,7 +187,7 @@ module.exports = (app, nextMain) => {
       ...((userId) && { userId }),
       ...((client) && { client }),
       ...((status) && { status }),
-      ...((status === 'delivered') && { dateProcessed: date }),
+      ...((status === 'delivered') && { dateProcessed: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}` }),
     };
     getDataByKeyword('orders', '_id', orderId)
       .then(() => {
@@ -224,7 +216,7 @@ module.exports = (app, nextMain) => {
             }
           });
       })
-      .catch(() => resp.status(404).send({ message: `There is no order with that id : ${orderId}` }));
+      .catch(() => resp.status(404).send({ message: `No existe orden con ese id : ${orderId}` }));
   });
 
   /**
@@ -248,18 +240,17 @@ module.exports = (app, nextMain) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {404} si el producto con `orderId` indicado no existe
    */
-  // eslint-disable-next-line no-unused-vars
   app.delete('/orders/:orderId', requireAuth, (req, resp, next) => {
     const { orderId } = req.params;
     if (!orderId || !req.headers.authorization) {
       return dataError(!orderId, !req.headers.authorization, resp);
     }
-    return getDataByKeyword('orders', '_id', orderId)
+    getDataByKeyword('orders', '_id', orderId)
       .then((result) => {
-        getOrderProduct(orderId, result, resp);
         deleteData('orders', '_id', orderId);
+        getOrderProduct(orderId, result, resp);
       })
-      .catch(() => resp.status(404).send({ message: `The requested order does not exist ${orderId}.` }));
+      .catch(() => resp.status(404).send({ message: `No existe el producto con id ${orderId}.` }));
   });
 
   nextMain();
