@@ -5,10 +5,8 @@
 * [1. Preámbulo](#1-pre%C3%A1mbulo)
 * [2. Resumen del proyecto](#2-resumen-del-proyecto)
 * [3. Objetivos de aprendizaje](#3-objetivos-de-aprendizaje)
-* [4. Consideraciones generales](#4-consideraciones-generales)
-* [5. Criterios de aceptación mínimos del proyecto](#5-criterios-de-aceptaci%C3%B3n-m%C3%ADnimos-del-proyecto)
-* [6. Pistas, tips y lecturas complementarias](#6-pistas-tips-y-lecturas-complementarias)
-* [7 HTTP API Checklist](#7-http-api-checklist)
+* [4. API ](#5-criterios-de-aceptaci%C3%B3n-m%C3%ADnimos-del-proyecto)
+* [5 HTTP API Checklist](#7-http-api-checklist)
 
 ## 1. Preámbulo
 
@@ -75,118 +73,78 @@ una base datos** (`MongoDB` o `MySQL`), **variables de entorno**, **deployment**
 
 ### Testing
 
-* [ ] [Testeo unitario.](https://jestjs.io/docs/es-ES/getting-started)
-* [ ] [Testeo asíncrono.](https://jestjs.io/docs/es-ES/asynchronous)
-* [ ] Tests de integración.
+* [x ] [Testeo unitario.](https://jestjs.io/docs/es-ES/getting-started)
+* [x] [Testeo asíncrono.](https://jestjs.io/docs/es-ES/asynchronous)
+* [x] Tests de integración.
 
 ### Estructura del código y guía de estilo
 
-* [ ] Organizar y dividir el código en módulos (Modularización)
-* [ ] Uso de identificadores descriptivos (Nomenclatura | Semántica)
-* [ ] Uso de linter (ESLINT)
+* [x] Organizar y dividir el código en módulos (Modularización)
+* [x] Uso de identificadores descriptivos (Nomenclatura | Semántica)
+* [x] Uso de linter (ESLINT)
 
 ### Git y GitHub
 
-* [ ] Uso de comandos de git (add | commit | pull | status | push)
-* [ ] Manejo de repositorios de GitHub (clone | fork | gh-pages)
-* [ ] Colaboración en Github (branches | pull requests | |tags)
-* [ ] Organización en Github (projects | issues | labels | milestones)
+* [x] Uso de comandos de git (add | commit | pull | status | push)
+* [x] Manejo de repositorios de GitHub (clone | fork | gh-pages)
+* [x] Colaboración en Github (branches | pull requests | |tags)
+* [x] Organización en Github (projects | issues | labels | milestones)
 
 ### Express
 
-* [ ] Rutas.
-* [ ] `middlewares`
+* [x] Rutas.
+* [x] `middlewares`
 
 ### HTTP
 
-* [ ] [Request, Response.](https://developer.mozilla.org/es/docs/Web/HTTP/Messages)
-* [ ] Headers.
-* [ ] Body.
-* [ ] [Verbos HTTP.](https://developer.mozilla.org/es/docs/Web/HTTP/Methods)
-* [ ] [Codigos de status de HTTP.](https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5)
-* [ ] Encodings y `JSON`.
-* [ ] [CORS.](https://developer.mozilla.org/es/docs/Web/HTTP/Access_control_CORS)
+* [x] [Request, Response.](https://developer.mozilla.org/es/docs/Web/HTTP/Messages)
+* [x] Headers.
+* [x] Body.
+* [x] [Verbos HTTP.](https://developer.mozilla.org/es/docs/Web/HTTP/Methods)
+* [x] [Codigos de status de HTTP.](https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5)
+* [x] Encodings y `JSON`.
+* [x] [CORS.](https://developer.mozilla.org/es/docs/Web/HTTP/Access_control_CORS)
 
 ### Autenticación
 
-* [ ] `JWT`
-* [ ] Almacenamiento y acceso de contraseñas.
+* [x] `JWT`
+* [x] Almacenamiento y acceso de contraseñas.
 
 ### Servidores
 
-* [ ] Variables de entorno.
-* [ ] `SSH`
-* [ ] `SSH` keys.
-* [ ] Qué es un VPS.
+* [x] Variables de entorno.
+* [x] `SSH`
+* [x] `SSH` keys.
+* [x] Qué es un VPS.
 
 ### Base de datos (MongoDB o MySQL)
 
-* [ ] Instalación.
-* [ ] Conexión a través de cliente.
-* [ ] Connection string.
-* [ ] Queries y comandos (creación, lectura, actualización, eliminación)
+* [x] Instalación.
+* [x] Conexión a través de cliente.
+* [x] Connection string.
+* [x] Queries y comandos (creación, lectura, actualización, eliminación)
 
 ### Deployment
 
-* [ ] Contenedores.
-* [ ] Docker.
-* [ ] Docker compose.
+* [x] Contenedores.
+* [x] Docker.
+* [] Docker compose.
 
-## 4. Consideraciones generales
 
-Este proyecto se realizará en duos y deberá integrarse con el proyecto
-[Burger Queen API client](https://github.com/Laboratoria/bootcamp/tree/master/projects/04-burger-queen-api-client)
-que desarrolle simultáneamente el equipo de Frontend developers de tu squad.
+##4. API
 
-La lógica del proyecto debe estar implementada completamente en JavaScript (ES6).
-En este proyecto está permitido usar librerías o frameworks, asi como
-extensiones al lenguaje con `babel` (caso en el cual deberás incluir un
-comando `npm build`).
+<img src="https://i.ibb.co/VpDxFwF/Sale.png" alt="Sale" border="0">
 
-Los tests deben cubrir un mínimo del 90% de _statements_, _functions_,
-_lines_ y _branches_. Si bien el boilerplate no incluye la configuración para
-pruebas unitarias, estas son obligatorias.
 
-Otro requerimiento del equipo de QA de nuestra clienta es realizar
-**pruebas _end-to-end_**, que usaremos para verificar el comportamiento desde el
-punto de vista de HTTP, desde afuera del servidor. Estos tests, a diferencia de
-las pruebas unitarias, no prueban cada pieza por separado sino que prueban la
-aplicación completa, de principio a fin. Estas pruebas, al no hacer uso directo
-del código fuente de la aplicación, pueden ejecutarse directamente sobre una URL
-remota, ya que la interfaz sometida a pruebas es HTTP.
-
-El _boilerplate_ ya contiene el setup y configuración
-necesaria para ejecutar todos los tests _end-to-end_ con el comando `npm run test:e2e`.
-
-```sh
-# Corre pruebas e2e sobre instancia local. Esto levanta la aplicación con npm
-# start y corre los tests contra la URL de esta instancia (por defecto
-# http://127.0.0.1:8080).
-npm run test:e2e
-
-# Corre pruebas e2e sobre URL remota
-REMOTE_URL=<TODO: poner URL> npm run test:e2e
-```
-
-Las pruebas _end-to-end_ ya están completas en el _boilerplate_, así que puedes
-usarlas como guía de implementación y checklist de completitud.
-
-## 5. Criterios de aceptación mínimos del proyecto
-
-### 5.1 API
-
-Según lo establecido por la [documentación](https://laboratoria.github.io/burger-queen-api/)
-entregada por nuestra clienta, la API debe exponer los siguientes endpoints:
-
-#### 5.1,1 `/`
+####  `/`
 
 * `GET /`
 
-#### 5.1.2 `/auth`
+#### `/auth`
 
 * `POST /auth`
 
-#### 5.1.3 `/users`
+#### `/users`
 
 * `GET /users`
 * `GET /users/:uid`
@@ -194,7 +152,7 @@ entregada por nuestra clienta, la API debe exponer los siguientes endpoints:
 * `PUT /users/:uid`
 * `DELETE /users/:uid`
 
-#### 5.1.4 `/products`
+#### `/products`
 
 * `GET /products`
 * `GET /products/:productid`
@@ -202,7 +160,7 @@ entregada por nuestra clienta, la API debe exponer los siguientes endpoints:
 * `PUT /products/:productid`
 * `DELETE /products/:productid`
 
-#### 5.1.5 `/orders`
+####  `/orders`
 
 * `GET /orders`
 * `GET /orders/:orderId`
@@ -222,7 +180,7 @@ diferentes entornos (desarrollo, producción, ...). El _boilerplate_ ya implemen
 y el
 [entorno](https://nodejs.org/docs/latest/api/process.html#process_process_env).
 
-#### 5.2.1 Argumentos de línea de comando
+####  Argumentos de línea de comando
 
 Podemos especificar el puerto en el que debe arrancar la aplicación pasando un
 argumento a la hora de invocar nuestro programa:
@@ -232,7 +190,7 @@ argumento a la hora de invocar nuestro programa:
 npm start 8888
 ```
 
-#### 5.2.2 Variables de entorno
+#### Variables de entorno
 
 Nuestra aplicación usa las siguientes variables de entorno:
 
@@ -256,7 +214,7 @@ Nuestra aplicación usa las siguientes variables de entorno:
 * `ADMIN_PASSWORD`: Si hemos especificado un `ADMIN_EMAIL`, debemos pasar
   también una contraseña para el usuario admin. Valor por defecto: `changeme`.
 
-### 5.3 Deployment
+### Deployment
 
 Nuestra clienta nos ha manifestado que su equipo de _devops_ está siempre con muchas
 tareas, por por lo que nos pide como requerimiento que la aplicación esté configurada
@@ -275,51 +233,46 @@ proveedores), acceder a él a través de `ssh`, clonar tu repositorio y ejecutar
 `docker-compose up` para levantar la aplicación y la documentación, para que
 queden online y accesibles.
 
-## 6. Pistas, tips y lecturas complementarias
 
-* [Express](https://expressjs.com/)
-* [MongoDB](https://www.mongodb.com/)
-* [MySQL](https://www.mysql.com/)
-* [docker](https://docs.docker.com/)
-* [docker compose](https://docs.docker.com/compose/)
-* [Postman](https://www.getpostman.com)
-* [Variable de entorno - Wikipedia](https://es.wikipedia.org/wiki/Variable_de_entorno)
-* [`process.env` - Node.js docs](https://nodejs.org/api/process.html#process_process_env)
-* TODO: providers de VPS recomendados, idealmente con un free tier o muy baratos.
-* [ssh](https://www.hostinger.es/tutoriales/que-es-ssh)
-
-***
 
 ## 7 HTTP API Checklist
 
 ### 7.1 `/`
 
-* [ ] `GET /`
+* [x] `GET /`
 
 ### 7.2 `/auth`
 
-* [ ] `POST /auth`
+* [x] `POST /auth`
 
 ### 7.3 `/users`
 
-* [ ] `GET /users`
-* [ ] `GET /users/:uid`
-* [ ] `POST /users`
-* [ ] `PUT /users/:uid`
-* [ ] `DELETE /users/:uid`
+* [x] `GET /users`
+* [x] `GET /users/:uid`
+* [x] `POST /users`
+* [x] `PUT /users/:uid`
+* [x] `DELETE /users/:uid`
 
 ### 7.4 `/products`
 
-* [ ] `GET /products`
-* [ ] `GET /products/:productid`
-* [ ] `POST /products`
-* [ ] `PUT /products/:productid`
-* [ ] `DELETE /products/:productid`
+* [x] `GET /products`
+* [x] `GET /products/:productid`
+* [x] `POST /products`
+* [x] `PUT /products/:productid`
+* [x] `DELETE /products/:productid`
 
 ### 7.5 `/orders`
 
-* [ ] `GET /orders`
-* [ ] `GET /orders/:orderId`
-* [ ] `POST /orders`
-* [ ] `PUT /orders/:orderId`
-* [ ] `DELETE /orders/:orderId`
+* [x] `GET /orders`
+* [x] `GET /orders/:orderId`
+* [x] `POST /orders`
+* [x] `PUT /orders/:orderId`
+* [x] `DELETE /orders/:orderId`
+
+<img src="https://i.ibb.co/hCzsBcw/create-products.png" alt="create-products" border="0">
+<img src="https://i.ibb.co/TkQ5LGp/create-users.png" alt="create-users" border="0">
+<img src="https://i.ibb.co/8zjGCJY/delete.png" alt="delete" border="0">
+<img src="https://i.ibb.co/j3640kJ/get-orders.png" alt="get-orders" border="0">
+<img src="https://i.ibb.co/FX5G47m/get-products.png" alt="get-products" border="0">
+<img src="https://i.ibb.co/tqLhpQp/get-users-with-page.png" alt="get-users-with-page" border="0">
+<img src="https://i.ibb.co/Hpw4jb7/update-users.png" alt="update-users" border="0">
