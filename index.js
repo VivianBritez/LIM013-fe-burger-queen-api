@@ -5,21 +5,14 @@ const authMiddleware = require('./middleware/auth');
 const errorHandler = require('./middleware/error');
 const routes = require('./routes');
 const pkg = require('./package.json');
-const conexion = require('./bk_data/data');
+
 
 // eslint-disable-next-line no-unused-vars
 const { port, dbUrl, secret } = config;
 const app = express(); // inicializarla
 app.use(cors());
 
-conexion.connect((error) => {
-  if (error) {
-    throw error;
-  } else {
-    // eslint-disable-next-line no-console
-    console.log('conexion exitosa...');
-  }
-});
+
 app.set('config', config); // settings nombre de variables
 app.set('pkg', pkg);
 
