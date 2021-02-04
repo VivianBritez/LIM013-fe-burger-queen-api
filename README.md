@@ -1,5 +1,9 @@
 # Burger Queen - API con Node.js
 
+Link desplegado en AWS 
+<http://3.82.101.104:8000>
+
+
 ## Índice
 
 * [1. Preámbulo](#1-pre%C3%A1mbulo)
